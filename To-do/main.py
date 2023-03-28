@@ -36,15 +36,9 @@ def post_todo(request :Request,task_desc:str =Form(...)):
     # user_id = request.session.get('user_id')
     # if not request.session.get('isLogin'):
     #     return RedirectResponse('/lgn-usr', status_code=status.HTTP_302_FOUND)
-    with sqlite3.connect(DATABASE_NAME) as con:
+    with sqlite3.connect("todo.db") as con:
         cur = con.cursor()
-        con.row_factory = sqlite3.Row
-        cur.execute("SELECT * from Bus b where b.bus_id=?", [bid])
-        Bus = cur.fetchall()
-        actual_seats = Bus[0][7]
-        remaining_seats = int(actual_seats) - int(seatnumber)
-        cur.execute("UPDATE Bus SET total_seats = ? where bus_id=?",[str(remaining_seats) ,bid])
-        cur.execute("INSERT into Busorders(user_id,username,email,phone,busnumber,buscomp,b_from,b_to,dept,arr,deptime,arrtime,depdate,terminal,bustype,seatnumber,totalprice) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                    (user_id,username, email,mobilenumber,busnumber,buscomp,b_from,b_to,dept,arr,deptime,arrtime,depdate,terminal,bustype,seatnumber,totalprice))
+        cur.execute("INSERT into task(task_desc,task_status) values(?,?)",
+                    (task_desc,0))
         con.commit()
-        return RedirectResponse("/confirm",status_code=status.HTTP_302_FOUND)
+        return templates.TemplateResponse("index.html",{"request": request ,"msg":"New Task added!"})
