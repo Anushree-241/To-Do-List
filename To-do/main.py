@@ -31,14 +31,13 @@ def task(request : Request):
     return templates.TemplateResponse("index.html", {"request" : request, "tasks" : tasks,"tsk":tsk})
 
 @todo.post("/",response_class=HTMLResponse)
-def post_todo(request :Request,task_desc:str =Form(...)):
+def post_todo(request :Request,task_desc:str =Form(...),taskid:str =Form(...)):
     #database -> inserting or updating, can be done POST request
-    # user_id = request.session.get('user_id')
-    # if not request.session.get('isLogin'):
-    #     return RedirectResponse('/lgn-usr', status_code=status.HTTP_302_FOUND)
     with sqlite3.connect("todo.db") as con:
         cur = con.cursor()
+        cur.execute("UPDATE task set task_status=? where task_id=?",[1,taskid]) 
         cur.execute("INSERT into task(task_desc,task_status) values(?,?)",
                     (task_desc,0))
-        con.commit()
-        return templates.TemplateResponse("index.html",{"request": request ,"msg":"New Task added!"})
+        return RedirectResponse("/",status_code=status.HTTP_302_FOUND)
+
+
