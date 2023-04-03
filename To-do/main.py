@@ -30,14 +30,20 @@ def task(request : Request):
     con.close
     return templates.TemplateResponse("index.html", {"request" : request, "tasks" : tasks,"tsk":tsk})
 
+
 @todo.post("/",response_class=HTMLResponse)
-def post_todo(request :Request,task_desc:str =Form(...),taskid:str =Form(...)):
+def post_todo(request :Request,task_desc:str =Form(...),task_status:str =Form(...),taskid:str =Form(...)):
     #database -> inserting or updating, can be done POST request
     with sqlite3.connect("todo.db") as con:
         cur = con.cursor()
-        cur.execute("UPDATE task set task_status=? where task_id=?",[1,taskid]) 
+        con.row_factory = sqlite3.Row
+        cur.execute("SELECT * from task where task_id=?", [int(taskid)])
+        task = cur.fetchall()
+        task_status = 1
+        cur.execute("UPDATE task set task_status=? where task_id=?",[task_status,int(taskid)]) 
         cur.execute("INSERT into task(task_desc,task_status) values(?,?)",
                     (task_desc,0))
+        con.commit()
         return RedirectResponse("/",status_code=status.HTTP_302_FOUND)
 
 
