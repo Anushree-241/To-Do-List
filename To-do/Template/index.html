@@ -51,13 +51,10 @@
         width: 2rem;
       }
     </style>
-    <!-- <script>
-      var checkbox = document.getElementById("checkelement");
-      if (checkbox.getAttribute("checked") == "checked")
-      {
-          checkbox.setAttribute("checked","checked");
-      }
-    </script> -->
+    <script>
+      var chkd;
+      for 
+    </script>
 </head>
 <body >
   <form action="/" method="post">
@@ -74,15 +71,16 @@
         <ul class="list-group">
           {% for tasks in tasks %}
           <li class="list-group-item">
-            <form action="/" method="post">
-            <button id="checkelement" name="check" class="form-check-input" type="submit" href="/" >    </button> 
+            
+            <input id="checkelement" name="check" class="form-check-input" onclick="checked(checkelement)" type="checkbox" >    
           
               <label class="form-check-label" >
                   <input type="text" hidden="hidden" name="taskid"  value="{{tasks.task_id}}">
                   {{tasks.task_desc}}
                   <input type="text" hidden="hidden" name="t_status" value="{{tasks.task_status}}">
               </label>
-            </form>
+            </input> 
+            
           </li>
           {% endfor %}
         </ul>

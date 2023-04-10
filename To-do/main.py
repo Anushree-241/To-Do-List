@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3   
 from fastapi import FastAPI, Query, Request, Cookie
 from fastapi.params import Form
 from fastapi.responses import HTMLResponse
@@ -35,7 +35,7 @@ def task(request : Request):
 def post_todo(request :Request,task_desc:str =Form(...),task_status:str =Form(...),taskid:str =Form(...)):
     #database -> inserting or updating, can be done POST request
     with sqlite3.connect("todo.db") as con:
-        cur = con.cursor()
+        cur = con.cursor() 
         con.row_factory = sqlite3.Row
         cur.execute("SELECT * from task where task_id=?", [int(taskid)])
         task = cur.fetchall()
@@ -45,5 +45,6 @@ def post_todo(request :Request,task_desc:str =Form(...),task_status:str =Form(..
                     (task_desc,0))
         con.commit()
         return RedirectResponse("/",status_code=status.HTTP_302_FOUND)
+
 
 
